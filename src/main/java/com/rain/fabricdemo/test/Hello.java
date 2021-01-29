@@ -28,10 +28,10 @@ import java.util.List;
 public class Hello {
 
     // connection.json 里应该配置网络信息
-    private static final Path NETWORK_CONFIG_PATH = Paths.get("src", "main", "resources", "connection.json");
+    private static final Path NETWORK_CONFIG_PATH = Paths.get("src", "main", "resources", "connection-kubernetes.json");
     // 证书的位置
     private static final Path credentialPath = Paths.get("src", "main", "resources", "crypto-config",
-            "peerOrganizations", "org1.example.com", "users", "Admin@org1.example.com", "msp");
+            "peerOrganizations", "org1-example-com", "users", "Admin@org1-example-com", "msp");
 
     private static void query(Network network) {
         try {
@@ -154,7 +154,7 @@ public class Hello {
         }
     }
 
-    private static void lightNodeBlockWalker(Network network) {
+    private static void blockWalker(Network network) {
         try {
             // 1.运行时，可以通过系统链码查询指定块的数据
 //            Contract contract = network.getContract("qscc");
@@ -175,7 +175,7 @@ public class Hello {
             for (int current = 0; current < channelInfo.getHeight(); current++) {
                 BlockInfo blockInfo = channel.queryBlockByNumber(current);
                 long blockNumber = blockInfo.getBlockNumber();
-
+                
                 System.out.println("---------------------------------------");
                 System.out.printf("Block %d: previous hash is %s \n", blockNumber, Hex.encodeHexString(blockInfo.getPreviousHash()));
                 System.out.printf("Block %d: data hash is %s \n", blockNumber, Hex.encodeHexString(blockInfo.getDataHash()));
@@ -188,8 +188,10 @@ public class Hello {
 
     public static void main(String[] args) throws Exception {
 
-        X509Certificate certificate = readX509Certificate(credentialPath.resolve(Paths.get("signcerts", "Admin@org1.example.com-cert.pem")));
-        PrivateKey privateKey = getPrivateKey(credentialPath.resolve(Paths.get("keystore", "priv_sk")));
+        Path certificatePath = credentialPath.resolve(Paths.get("signcerts", "Admin@org1-example-com-cert.pem"));
+        X509Certificate certificate = readX509Certificate(certificatePath);
+        Path privateKeyPath = credentialPath.resolve(Paths.get("keystore", "key.pem"));
+        PrivateKey privateKey = getPrivateKey(privateKeyPath);
 
         // 加载一个钱包，里面有接入网络所需要的identities
         Wallet wallet = Wallets.newInMemoryWallet();
@@ -214,13 +216,13 @@ public class Hello {
 //            queryLedger(network);
 
             // 指定peer查询
-            queryFromPeer(network);
+//            queryFromPeer(network);
 
             // 指定peer提交交易
 //            invokeFromPeer(network);
 
             // 查询轻节点上的数据
-            // lightNodeBlockWalker(network);
+             blockWalker(network);
         } catch (Exception e) {
             System.out.println("Main Error!");
             e.printStackTrace();

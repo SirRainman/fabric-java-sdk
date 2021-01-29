@@ -14,11 +14,10 @@ import java.security.PrivateKey;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.EnumSet;
-import java.util.concurrent.TimeoutException;
 
 public class WalletDemo {
     // connection.json 里应该配置网络信息
-    private static final Path NETWORK_CONFIG_PATH = Paths.get("src", "main", "resources", "connection-lightnode.json");
+    private static final Path NETWORK_CONFIG_PATH = Paths.get("src", "main", "resources", "connection-kubernetes.json");
     // 证书的位置
     private static final Path credentialPath = Paths.get("src", "main", "resources", "crypto-config",
             "peerOrganizations", "org1.example.com", "users", "Admin@org1.example.com", "msp");

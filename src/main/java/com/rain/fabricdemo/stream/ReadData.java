@@ -11,9 +11,9 @@ import java.util.concurrent.TimeUnit;
 public class ReadData extends TimerTask {
     private int maxDataSize = 1;
     private static final Object lock = new Object();
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(80);
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(96);
     private Timer timer;
-    private static int generateOnce = 100000;
+    private static int generateOnce = 200000;
     private static final Long period = 100L; // 单位是ms    每隔一段时间产生一定量的数据
     private final Set<DataItem> DataPool = new HashSet<>();
 
@@ -22,7 +22,7 @@ public class ReadData extends TimerTask {
         // 1模拟生产者和消费者
         //timer.scheduleAtFixedRate(this, 0, period);
         // 2一次性生产出来数据
-        timer.schedule(this, 3);
+        timer.schedule(this, 10000);
         this.timer = timer;
     }
 
@@ -63,13 +63,13 @@ public class ReadData extends TimerTask {
         }
         executorService.shutdown();
 
-        try {
-            while (!executorService.awaitTermination(1, TimeUnit.SECONDS)) {
-                System.out.println("1 second passed...");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            while (!executorService.awaitTermination(1, TimeUnit.SECONDS)) {
+//                System.out.println("1 second passed...");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         System.out.println("read over");
         return System.currentTimeMillis();

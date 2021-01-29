@@ -38,7 +38,7 @@ public class QueryLedger {
 
             transaction.setEndorsingPeers(endorserSet);
 
-            transaction.submit(account, "100", account+"test", "100");
+            transaction.submit("WIN"+account, "100", "WIN"+account+"test", "100");
         } catch (Exception e) {
             System.out.println("Invoke Error");
             e.printStackTrace();

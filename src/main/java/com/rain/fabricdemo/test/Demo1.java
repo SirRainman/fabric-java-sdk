@@ -28,9 +28,8 @@ import java.util.EnumSet;
 public class Demo1 {
     private Gateway gateway;
     private Network network;
-    private static final Path NETWORK_CONFIG_PATH = Paths.get("src", "main", "resources", "connection-lightnode.json");
-    private static final Path credentialPath = Paths.get("src", "main", "resources", "crypto-config",
-            "peerOrganizations", "org1.example.com", "users", "Admin@org1.example.com", "msp");
+    private static final Path NETWORK_CONFIG_PATH = Paths.get("src", "main", "resources", "connection-kubernetes.json");
+    private static final Path credentialPath = Paths.get("E:\\JAVA CODE\\Fabric Workspace\\fabricdemo-sdk\\src\\main\\resources\\crypto-config\\organizations\\peerOrganizations\\org1-example-com\\users\\Admin@org1-example-com\\msp");
 
     public static void main(String[] args) {
 
@@ -40,10 +39,10 @@ public class Demo1 {
         try {
             //使用org1中的user1初始化一个网关wallet账户用于连接网络
             Wallet wallet = Wallets.newInMemoryWallet();
-            Path certificatePath = credentialPath.resolve(Paths.get("signcerts", "Admin@org1.example.com-cert.pem"));
+            Path certificatePath = credentialPath.resolve(Paths.get("signcerts", "Admin@org1-example-com-cert.pem"));
             certificate = readX509Certificate(certificatePath);
 
-            Path privateKeyPath = credentialPath.resolve(Paths.get("keystore", "priv_sk"));
+            Path privateKeyPath = credentialPath.resolve(Paths.get("keystore", "key.pem"));
             privateKey = getPrivateKey(privateKeyPath);
 
             wallet.put("user", Identities.newX509Identity("Org1MSP", certificate, privateKey));
@@ -57,7 +56,7 @@ public class Demo1 {
             //获取mychannel通道
             Network network = gateway.getNetwork("mychannel");
             //获取合约对象
-            Contract contract = network.getContract("mycc");
+            Contract contract = network.getContract("basic");
             //查询合约对象evaluateTransaction
             byte[] queryAResultBefore = contract.evaluateTransaction("query", "a");
             System.out.println("Balance A:" + new String(queryAResultBefore, StandardCharsets.UTF_8));
